@@ -1,0 +1,23 @@
+Goat-framework - Copyright (C) 2025 Hiro Liang
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Additional Permission under GNU GPL version 3 section 7:
+
+As an exception, you may link or use the Goat-framework library
+as a dependency in your application (including commercial applications)
+without the requirement to release the source code of your application,
+as long as you do not modify the Goat-framework itself.
+
+If you modify the Goat-framework itself and distribute the modified version,
+you must make your modifications available under the terms of the GNU GPL v3.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

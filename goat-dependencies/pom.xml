@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hiro.goat</groupId>
+  <artifactId>goat-dependencies</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+
+  <name>goat-dependencies</name>
+
+  <properties>
+    <goat.core.version>0.0.1</goat.core.version>
+
+    <java.version>21</java.version>
+    <lombok.version>1.18.38</lombok.version>
+    <jackson.version>2.19.0</jackson.version>
+
+    <junit.version>5.12.2</junit.version>
+    <junit.suite.version>1.12.2</junit.suite.version>
+    <cucumber.version>7.22.2</cucumber.version>
+
+    <maven.compiler.version>3.14.0</maven.compiler.version>
+    <maven.serfire.verison>3.5.3</maven.serfire.verison>
+
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- goat dependencies -->
+      <dependency>
+        <groupId>com.hiro.goat</groupId>
+        <artifactId>goat-core</artifactId>
+        <version>${goat.core.version}</version>
+      </dependency>
+
+      <!-- maven dependencies -->
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <optional>true</optional>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-suite</artifactId>
+        <version>${junit.suite.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-java</artifactId>
+        <version>${cucumber.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-junit-platform-engine</artifactId>
+        <version>${cucumber.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.version}</version>
+          <configuration>
+            <release>${java.version}</release>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.serfire.verison}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
