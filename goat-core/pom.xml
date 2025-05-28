@@ -18,6 +18,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- jackson -->
@@ -26,5 +28,4 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
-
 </project>

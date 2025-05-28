@@ -21,6 +21,8 @@ public class ParcelStepDefs {
     public void a_new_parcel(String parcelName) throws Exception {
         String fullName = parcelName.contains(".") ? parcelName : "com.hiro.goat.parcel." + parcelName;
         this.parcel = getParcel(fullName);
+
+        assertTrue(this.parcel.isEmpty());
     }
 
     @When("I put in a value:")
@@ -42,6 +44,8 @@ public class ParcelStepDefs {
 
     @Then("I can't put value in it")
     public void i_cant_put_value_in_it() {
+        assertTrue(this.parcel.isSealed());
+
         TestValue value = new TestValue();
         Exception e = assertThrows(IllegalStateException.class, () -> this.parcel.put(value));
         assertEquals("the parcel is sealed", e.getMessage());

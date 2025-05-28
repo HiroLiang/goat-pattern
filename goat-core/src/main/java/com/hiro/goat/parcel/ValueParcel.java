@@ -1,28 +1,25 @@
 package com.hiro.goat.parcel;
 
-public class ValueParcel<T> implements Parcel<T> {
+import lombok.NoArgsConstructor;
 
-    protected T value;
+@NoArgsConstructor
+public class ValueParcel<T> extends AbstractParcel<T> {
 
-    protected volatile boolean sealed = false;
+    public ValueParcel(T value) {
+        this.value = value;
+    }
 
     @Override
     public void put(T value) {
         if (this.sealed) {
             throw new IllegalStateException("the parcel is sealed");
         }
-
         this.value = value;
     }
 
     @Override
     public void seal() {
         this.sealed = true;
-    }
-
-    @Override
-    public boolean isSealed() {
-        return this.sealed;
     }
 
     @Override
