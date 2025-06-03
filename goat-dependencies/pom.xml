@@ -12,19 +12,22 @@
   <properties>
     <goat.core.version>0.0.1</goat.core.version>
 
-    <java.version>21</java.version>
+    <slf4j.version>2.0.17</slf4j.version>
     <lombok.version>1.18.38</lombok.version>
+    <logback.version>1.5.18</logback.version>
+
     <jackson.version>2.19.0</jackson.version>
 
-    <junit.version>5.12.2</junit.version>
+    <junit.version>4.13.2</junit.version>
+    <jupiter.version>5.12.2</jupiter.version>
     <junit.suite.version>1.12.2</junit.suite.version>
+
     <cucumber.version>7.22.2</cucumber.version>
+    <serenity.version>4.2.30</serenity.version>
 
     <maven.compiler.version>3.14.0</maven.compiler.version>
-    <maven.serfire.verison>3.5.3</maven.serfire.verison>
+    <maven.surefire.version>3.5.3</maven.surefire.version>
 
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -39,11 +42,21 @@
 
       <!-- maven dependencies -->
       <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
-        <optional>true</optional>
-        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
       </dependency>
 
       <dependency>
@@ -53,31 +66,51 @@
       </dependency>
 
       <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
+        <version>${jupiter.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.junit.platform</groupId>
         <artifactId>junit-platform-suite</artifactId>
         <version>${junit.suite.version}</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>io.cucumber</groupId>
         <artifactId>cucumber-java</artifactId>
         <version>${cucumber.version}</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>
         <groupId>io.cucumber</groupId>
         <artifactId>cucumber-junit-platform-engine</artifactId>
         <version>${cucumber.version}</version>
-        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-core</artifactId>
+        <version>${serenity.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-junit5</artifactId>
+        <version>${serenity.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.serenity-bdd</groupId>
+        <artifactId>serenity-cucumber</artifactId>
+        <version>${serenity.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -89,15 +122,18 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven.compiler.version}</version>
-          <configuration>
-            <release>${java.version}</release>
-          </configuration>
         </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven.serfire.verison}</version>
+          <version>${maven.surefire.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>net.serenity-bdd.maven.plugins</groupId>
+          <artifactId>serenity-maven-plugin</artifactId>
+          <version>${serenity.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
