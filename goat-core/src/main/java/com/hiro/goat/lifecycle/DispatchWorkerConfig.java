@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface WorkerConfig {
+public @interface DispatchWorkerConfig {
 
     int coreSize() default 4;
 
