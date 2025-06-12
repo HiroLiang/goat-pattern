@@ -1,4 +1,4 @@
-package com.hiro.goat.lifecycle;
+package com.hiro.goat.api.worker;
 
 public interface Lifecycle {
 

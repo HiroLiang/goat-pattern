@@ -1,7 +1,8 @@
-package com.hiro.goat.parcel;
+package com.hiro.goat.core.parcel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hiro.goat.api.parcel.Parcel;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -21,7 +22,7 @@ public class ParcelStepDefs {
 
     @Given( "a new {word}")
     public void a_new_parcel(String parcelName) throws Exception {
-        String fullName = parcelName.contains(".") ? parcelName : "com.hiro.goat.parcel." + parcelName;
+        String fullName = parcelName.contains(".") ? parcelName : "com.hiro.goat.core.parcel." + parcelName;
         this.parcel = getParcel(fullName);
 
         assertTrue(this.parcel.isEmpty());

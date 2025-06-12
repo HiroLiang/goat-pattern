@@ -1,4 +1,6 @@
-package com.hiro.goat.parcel;
+package com.hiro.goat.core.parcel;
+
+import com.hiro.goat.api.parcel.Parcel;
 
 public abstract class AbstractParcel<T> implements Parcel<T> {
 
@@ -15,4 +17,5 @@ public abstract class AbstractParcel<T> implements Parcel<T> {
     public boolean isEmpty() {
         return value == null;
     }
+
 }

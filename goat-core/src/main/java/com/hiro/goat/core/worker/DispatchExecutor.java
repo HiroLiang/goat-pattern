@@ -1,13 +1,13 @@
-package com.hiro.goat.lifecycle;
+package com.hiro.goat.core.worker;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface DispatchWorkerConfig {
+@Retention(RetentionPolicy.RUNTIME)
+public @interface DispatchExecutor {
 
     int coreSize() default 4;
 

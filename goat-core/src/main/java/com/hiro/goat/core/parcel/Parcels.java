@@ -1,4 +1,4 @@
-package com.hiro.goat.parcel;
+package com.hiro.goat.core.parcel;
 
 public class Parcels {
 

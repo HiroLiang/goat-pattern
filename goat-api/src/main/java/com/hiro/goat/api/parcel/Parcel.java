@@ -1,9 +1,5 @@
-package com.hiro.goat.parcel;
+package com.hiro.goat.api.parcel;
 
-/**
- *
- * @param <T> item to pack
- */
 public interface Parcel<T> {
 
     void put(T value);

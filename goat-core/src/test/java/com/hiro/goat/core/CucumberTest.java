@@ -1,4 +1,4 @@
-package com.hiro.goat;
+package com.hiro.goat.core;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;

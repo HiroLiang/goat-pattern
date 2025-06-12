@@ -1,4 +1,6 @@
-package com.hiro.goat.lifecycle;
+package com.hiro.goat.core.worker;
+
+import com.hiro.goat.api.worker.Lifecycle;
 
 public abstract class AbstractLifecycle implements Lifecycle {
 
