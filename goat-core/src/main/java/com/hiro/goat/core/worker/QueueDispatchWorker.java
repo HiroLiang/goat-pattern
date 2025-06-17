@@ -144,7 +144,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
         log.warn("Task Consumer of class \"{}\" should be override or be passed in constructor.", task.getClass().getSimpleName());
     }
 
-    private void initExecutor() {
+    protected void initExecutor() {
         if (executor == null) {
             this.executor = Objects.requireNonNull(executorFactory.get(), "ExecutorService cannot be null");
         }

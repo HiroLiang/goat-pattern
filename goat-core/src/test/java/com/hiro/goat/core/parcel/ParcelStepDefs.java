@@ -57,7 +57,6 @@ public class ParcelStepDefs {
     @When("I reveal the parcel")
     public void i_reveal_the_parcel() {
         this.revealed = this.parcel.reveal();
-        log.info("revealed: {}", this.revealed);
     }
 
     @Then("the name should be {string}")
