@@ -16,7 +16,7 @@ public class TestWorker extends AbstractWorker {
             try {
 
                 // noinspection BusyWait
-                Thread.sleep(1000);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

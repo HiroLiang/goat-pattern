@@ -28,7 +28,7 @@ public class DispatcherStepDefs {
     public void iSubmitAStr(String str) {
         try {
             dispatcher.submit(str);
-            sleep(500L);
+            sleep(200L);
         } catch (InterruptedException e) {
             fail("Test was interrupted: fail to submit a string: " + str);
         }
@@ -44,7 +44,7 @@ public class DispatcherStepDefs {
     public void i_submit_dispatcher_the_following_strings(List<String> strings) {
         try {
             dispatcher.submit(strings);
-            sleep(1000L);
+            sleep(500L);
         } catch (InterruptedException e) {
             fail("Test was interrupted: fail to submit strings: " + strings);
         }
@@ -62,14 +62,14 @@ public class DispatcherStepDefs {
     public void i_offer_dispatcher_a_str(String str) {
         boolean success = dispatcher.offer(str);
         assertTrue(success);
-        sleep(500L);
+        sleep(200L);
     }
 
     @When("I offer dispatcher the following strings:")
     public void i_offer_dispatcher_the_following_strings(List<String> strings) {
         int index = dispatcher.offer(strings);
         assertEquals(strings.size(), index);
-        sleep(1000L);
+        sleep(500L);
     }
 
     private void sleep(long millis) {
