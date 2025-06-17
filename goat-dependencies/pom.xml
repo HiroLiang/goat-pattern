@@ -36,6 +36,12 @@
       <!-- goat dependencies -->
       <dependency>
         <groupId>com.hiro.goat</groupId>
+        <artifactId>goat-api</artifactId>
+        <version>${goat.core.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.hiro.goat</groupId>
         <artifactId>goat-core</artifactId>
         <version>${goat.core.version}</version>
       </dependency>
