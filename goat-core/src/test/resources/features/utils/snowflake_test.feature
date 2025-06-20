@@ -1,7 +1,7 @@
 Feature: Snow Flake Generator
 
   Scenario Outline:
-    Given a snow flake generator
+    Given a snowflake generator
     When I create <number> identities
     Then I have <number> identities in Set
 

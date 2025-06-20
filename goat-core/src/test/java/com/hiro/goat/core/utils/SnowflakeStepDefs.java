@@ -15,11 +15,11 @@ public class SnowflakeStepDefs {
 
     private SnowflakeGenerator generator;
 
-    @Given("a snow flake generator")
+    @Given("a snowflake generator")
     public void a_snow_flake_generator() {
         assertThrows(IllegalArgumentException.class, ()
-                -> generator = new SnowflakeGenerator(44, 44));
-        this.generator = new SnowflakeGenerator(31, 31);
+                -> generator = new SnowflakeGenerator(1999));
+        this.generator = new SnowflakeGenerator(31);
         assertNotNull(this.generator);
     }
 

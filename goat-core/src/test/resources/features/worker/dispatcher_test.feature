@@ -14,6 +14,8 @@ Feature: Test Queue Dispatch Worker
       |Jack|
     When I offer dispatcher a str "word"
     Then words should contain "word"
+    When I offer dispatcher a str "word" after 500 millisecond
+    Then words should contain "word" after 500 millisecond
     When I offer dispatcher the following strings:
       |Bob|
       |John|

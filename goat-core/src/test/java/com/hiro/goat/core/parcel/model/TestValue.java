@@ -1,4 +1,4 @@
-package com.hiro.goat.core.parcel;
+package com.hiro.goat.core.parcel.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

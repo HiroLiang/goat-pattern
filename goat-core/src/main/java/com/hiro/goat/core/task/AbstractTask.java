@@ -1,7 +1,7 @@
 package com.hiro.goat.core.task;
 
-import com.hiro.goat.api.chain.ChainList;
 import com.hiro.goat.api.task.Task;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -9,12 +9,11 @@ public abstract class AbstractTask implements Task {
 
     protected volatile boolean success = false;
 
+    protected volatile boolean rollback = false;
+
     protected abstract void process();
 
-    @Override
-    public ChainList<?> chaining() {
-        return new TaskChain().chain(this);
-    }
+    protected abstract void rollback();
 
     @Override
     public boolean isSuccess() {
@@ -23,9 +22,13 @@ public abstract class AbstractTask implements Task {
 
     @Override
     public void execute() {
-        preProcess();
         try {
-            process();
+            preProcess();
+            if (rollback) {
+                rollback();
+            } else {
+                process();
+            }
             this.success = true;
         } catch (Exception e) {
             log.warn("Task {} execute error", this.getClass().getSimpleName(), e);
@@ -38,6 +41,19 @@ public abstract class AbstractTask implements Task {
         execute();
     }
 
-    protected void preProcess() {}
-    protected void postProcess() {}
+    public void rollback(boolean rollback) {
+        this.rollback = rollback;
+        if (rollback) {
+            log.debug("Task {} will be rollback", this.getClass().getSimpleName());
+        } else {
+            log.debug("Task {} will be process", this.getClass().getSimpleName());
+        }
+    }
+
+    protected void preProcess() {
+    }
+
+    protected void postProcess() {
+    }
+
 }

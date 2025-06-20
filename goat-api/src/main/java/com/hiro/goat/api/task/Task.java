@@ -1,8 +1,6 @@
 package com.hiro.goat.api.task;
 
-import com.hiro.goat.api.chain.Chainable;
-
-public interface Task extends Runnable, Chainable {
+public interface Task extends Runnable {
 
     void execute();
 

@@ -1,6 +1,7 @@
 package com.hiro.goat.core.worker;
 
 import com.hiro.goat.api.worker.DispatchWorker;
+
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -55,7 +56,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
     /**
      * Create a new QueueDispatchWorker with the given task consumer and executor factory.
      *
-     * @param taskConsumer the task consumer to execute the tasks.
+     * @param taskConsumer    the task consumer to execute the tasks.
      * @param executorFactory the executor factory to create the executor.
      */
     public QueueDispatchWorker(Consumer<T> taskConsumer, Supplier<ExecutorService> executorFactory) {
@@ -109,6 +110,25 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
             index++;
         }
         return index;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (this.executor != null) {
+            this.executor.shutdown();
+            try {
+                if (!this.executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                    this.executor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                this.executor.shutdownNow();
+                Thread.currentThread().interrupt();
+            } finally {
+                this.executor = null;
+            }
+        }
+
+        tasks.clear();
     }
 
     protected ExecutorService createExecutor() {
