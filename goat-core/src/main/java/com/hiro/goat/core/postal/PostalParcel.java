@@ -2,6 +2,8 @@ package com.hiro.goat.core.postal;
 
 import com.hiro.goat.api.signature.Signable;
 import com.hiro.goat.api.signature.Signer;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
 import com.hiro.goat.core.parcel.ValueParcel;
 
 import org.apache.commons.lang3.StringUtils;
@@ -60,10 +62,10 @@ public class PostalParcel<T> extends ValueParcel<T> implements Signable {
     @Override
     public void seal() {
         if (this.sealed) {
-            throw new IllegalStateException("postal parcel can't be double sealed");
+            throw GoatErrors.of("Postal parcel can't be double sealed.", IllegalModifyException.class);
         }
         if (StringUtils.isBlank(this.signature)) {
-            throw new IllegalStateException("signature should be signed before sealing");
+            throw GoatErrors.of("signature should be signed before sealing", IllegalModifyException.class);
         }
         super.seal();
     }
@@ -71,7 +73,7 @@ public class PostalParcel<T> extends ValueParcel<T> implements Signable {
     @Override
     public T reveal() {
         if (isSealed()) {
-            throw new IllegalStateException("parcel is sealed");
+            throw GoatErrors.of("Postal parcel can't be revealed after sealed.", IllegalModifyException.class);
         }
 
         return super.reveal();
@@ -89,7 +91,7 @@ public class PostalParcel<T> extends ValueParcel<T> implements Signable {
             signer.sign(this);
             return this;
         }
-        throw new IllegalArgumentException("Sender is not registered");
+        throw GoatErrors.of("Sender is not registered", IllegalModifyException.class);
     }
 
 }

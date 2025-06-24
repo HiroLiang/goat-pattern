@@ -1,5 +1,7 @@
 package com.hiro.goat.core.postal;
 
+import com.hiro.goat.core.exception.IllegalModifyException;
+import com.hiro.goat.core.exception.PostalException;
 import com.hiro.goat.core.postal.model.TestMailbox;
 import com.hiro.goat.core.postal.model.TestPostalCenter;
 
@@ -49,7 +51,7 @@ public class PostalStepDefs {
 
     @When("I register a group {string}")
     public void i_register_a_group(String group) {
-        assertThrows(IllegalArgumentException.class, () -> postalCenter.registerGroup(mailbox2, null));
+        assertThrows(IllegalModifyException.class, () -> postalCenter.registerGroup(mailbox2, null));
         postalCenter.registerGroup(mailbox2, group);
     }
 
@@ -62,7 +64,7 @@ public class PostalStepDefs {
 
     @When("I unregister group {string}")
     public void i_unregister_group(String group) {
-        assertThrows(IllegalArgumentException.class, () -> postalCenter.unregisterGroup(mailbox2, null));
+        assertThrows(IllegalModifyException.class, () -> postalCenter.unregisterGroup(mailbox2, null));
         postalCenter.unregisterGroup(mailbox2, group);
     }
 
@@ -84,10 +86,10 @@ public class PostalStepDefs {
 
     @Then("I can not deliver parcel")
     public void i_can_not_deliver_parcel() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PostalException.class, () ->
                 postalCenter.getParcel(mailbox1, mailbox2.getPostalCode(), RecipientType.MAILBOX));
 
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(PostalException.class, () ->
                 postalCenter.getParcel(mailbox1, "test-group"));
     }
 

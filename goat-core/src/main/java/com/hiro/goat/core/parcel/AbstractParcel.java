@@ -1,6 +1,8 @@
 package com.hiro.goat.core.parcel;
 
 import com.hiro.goat.api.parcel.Parcel;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
 
 public abstract class AbstractParcel<T> implements Parcel<T> {
 
@@ -11,7 +13,7 @@ public abstract class AbstractParcel<T> implements Parcel<T> {
     @Override
     public void put(T value) {
         if (this.sealed) {
-            throw new IllegalStateException("the parcel is sealed");
+            throw GoatErrors.of("Can't put a value in the parcel which's sealed.", IllegalModifyException.class);
         }
         this.value = value;
     }

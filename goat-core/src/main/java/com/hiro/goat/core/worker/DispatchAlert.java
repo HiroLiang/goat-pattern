@@ -8,14 +8,12 @@ import java.util.concurrent.TimeUnit;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DispatchDequeue {
+public @interface DispatchAlert {
 
-    int size() default 1023;
+    int alertSize() default -1;
 
-    ResidualTaskSchedule schedule() default ResidualTaskSchedule.CONSUME;
+    long alertPeriod() default 3600L;
 
-    long timeout() default 60L;
-
-    TimeUnit timeoutUnit() default TimeUnit.SECONDS;
+    TimeUnit periodUnit() default TimeUnit.SECONDS;
 
 }

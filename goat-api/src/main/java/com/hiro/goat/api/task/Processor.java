@@ -1,7 +1,7 @@
 package com.hiro.goat.api.task;
 
-public interface Processor {
+public interface Processor<T extends Task<?, ?>> {
 
-    void process(Task task);
+    void process(T task);
 
 }

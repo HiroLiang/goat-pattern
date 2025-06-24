@@ -3,6 +3,8 @@ package com.hiro.goat.core.postal;
 import com.hiro.goat.api.signature.Signable;
 import com.hiro.goat.api.signature.Signer;
 import com.hiro.goat.api.signature.Verifier;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.PostalException;
 
 import lombok.NonNull;
 
@@ -37,7 +39,7 @@ public class HmacSha256Signer implements Signer, Verifier {
                 mac.init(keySpec);
                 return mac;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw GoatErrors.of("Error create Mac.", PostalException.class, e);
             }
         });
     }
@@ -76,7 +78,7 @@ public class HmacSha256Signer implements Signer, Verifier {
             byte[] result = mac.doFinal(signable.signableData().getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(result);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw GoatErrors.of("Error generate signature.", PostalException.class, e);
         }
     }
 

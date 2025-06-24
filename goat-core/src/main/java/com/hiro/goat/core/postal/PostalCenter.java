@@ -1,5 +1,8 @@
 package com.hiro.goat.core.postal;
 
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
+import com.hiro.goat.core.exception.PostalException;
 import com.hiro.goat.core.worker.QueueDispatchWorker;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +56,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
 
     public void registerGroup(Mailbox<T> mailBox, String group) {
         if (StringUtils.isBlank(group)) {
-            throw new IllegalArgumentException("group is blank");
+            throw GoatErrors.of("Register group is blank.", IllegalModifyException.class);
         }
 
         verifyMailbox(mailBox);
@@ -67,7 +70,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
 
     public void unregisterGroup(Mailbox<T> mailBox, String group) {
         if (StringUtils.isBlank(group)) {
-            throw new IllegalArgumentException("group is blank");
+            throw GoatErrors.of("Unregister group is blank.", IllegalModifyException.class);
         }
 
         verifyMailbox(mailBox);
@@ -80,7 +83,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     public PostalParcel<T> getParcel(Mailbox<T> sender, long recipient, RecipientType type) {
         verifyMailbox(sender);
         if (!isRegistered(recipient)) {
-            throw new IllegalArgumentException("Recipient is not registered");
+            throw GoatErrors.of("Recipient is not registered.", PostalException.class);
         }
         return new PostalParcel<>(sender.getPostalCode(), recipient, type);
     }
@@ -100,18 +103,18 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
 
     private void verifyMailbox(Mailbox<T> mailBox) {
         if (!isRegistered(mailBox)) {
-            throw new IllegalArgumentException("MailBox is not registered");
+            throw GoatErrors.of("MailBox is not registered.", PostalException.class);
         }
     }
 
     private void verifyParcel(PostalParcel<T> parcel) {
         if (!isRegistered(parcel.getSender())) {
-            throw new IllegalArgumentException("Sender is not registered");
+            throw GoatErrors.of("Sender is not registered.", PostalException.class);
         }
 
         if (RecipientType.MAILBOX.equals(parcel.getRecipientType())) {
             if (!isRegistered(parcel.getRecipient())) {
-                throw new IllegalArgumentException("Recipient is not registered");
+                throw GoatErrors.of("Recipient is not registered.", PostalException.class);
             }
         }
     }
@@ -129,8 +132,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
             case BROADCAST:
                 return new ArrayList<>(this.registeredHolders.values());
             default:
-                log.warn("Unknown recipient type: {}", parcel.getRecipientType());
-                throw new IllegalArgumentException("Unknown recipient type: " + parcel.getRecipientType());
+                throw GoatErrors.of("Unknown recipient type: " + parcel.getRecipientType(), PostalException.class);
         }
     }
 

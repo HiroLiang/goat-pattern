@@ -1,13 +1,16 @@
 package com.hiro.goat.core.parcel;
 
+import com.hiro.goat.api.parcel.Parcel;
+import com.hiro.goat.core.exception.IllegalModifyException;
+import com.hiro.goat.core.parcel.model.TestValue;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hiro.goat.api.parcel.Parcel;
-import com.hiro.goat.core.parcel.model.TestValue;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
 import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.Assert.*;
@@ -56,8 +59,8 @@ public class ParcelStepDefs {
         assertTrue(this.parcel.isSealed());
 
         TestValue value = new TestValue();
-        Exception e = assertThrows(IllegalStateException.class, () -> this.parcel.put(value));
-        assertEquals("the parcel is sealed", e.getMessage());
+        Exception e = assertThrows(IllegalModifyException.class, () -> this.parcel.put(value));
+        assertEquals("Can't put a value in the parcel which's sealed.", e.getMessage());
     }
 
     @When("I reveal the parcel")

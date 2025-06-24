@@ -1,6 +1,9 @@
 package com.hiro.goat.core.utils;
 
+import com.hiro.goat.api.exception.GoatException;
 import com.hiro.goat.api.identity.IdentityGenerator;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
 
 public class SnowflakeGenerator implements IdentityGenerator {
 
@@ -13,6 +16,7 @@ public class SnowflakeGenerator implements IdentityGenerator {
      * allow 0 ~ 1023 number of devices
      */
     private final long deviceId;
+
     private final long deviceBits = 10L;
 
     /**
@@ -27,19 +31,21 @@ public class SnowflakeGenerator implements IdentityGenerator {
 
     /**
      * Constructor
+     *
      * @param deviceId allow 0 ~ 1023 devices
      */
     public SnowflakeGenerator(long deviceId) {
         this.epoch = 1695657600000L;
         final long maxDatacenterId = ~(-1L << deviceBits);
         if (deviceId > maxDatacenterId || deviceId < 0) {
-            throw new IllegalArgumentException("Datacenter ID need to be in 0~" + maxDatacenterId);
+            throw GoatErrors.of("Datacenter ID need to be in 0~" + maxDatacenterId, IllegalModifyException.class);
         }
         this.deviceId = deviceId;
     }
 
     /**
      * Get next ID
+     *
      * @return long
      */
     @Override
@@ -51,7 +57,8 @@ public class SnowflakeGenerator implements IdentityGenerator {
         long timestamp = currentTime();
 
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException("Clock moved backwards.");
+            throw GoatErrors.of("Clock moved backwards. Refusing to generate id for "
+                    + (lastTimestamp - timestamp) + " milliseconds.", GoatException.class);
         }
 
         if (timestamp == lastTimestamp) {
