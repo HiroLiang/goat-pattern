@@ -1,4 +1,4 @@
-package com.hiro.goat.platform.order.task;
+package com.hiro.goat.platform.graph.order;
 
 import com.hiro.goat.api.task.DependencyProvider;
 import com.hiro.goat.core.task.AbstractTask;

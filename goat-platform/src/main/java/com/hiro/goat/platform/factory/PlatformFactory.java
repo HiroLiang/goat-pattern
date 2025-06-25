@@ -1,4 +1,4 @@
-package com.hiro.goat.platform.utils;
+package com.hiro.goat.platform.factory;
 
 import com.hiro.goat.core.exception.GoatErrors;
 import com.hiro.goat.platform.Platform;

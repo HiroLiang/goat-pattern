@@ -12,7 +12,7 @@ public class PlatformPostalCenter extends PostalCenter<PlatformOrder<?, ?>> {
     @Getter
     protected final IdentityGenerator idGenerator;
 
-    protected PlatformPostalCenter(long deviceId, String secret) {
+    public PlatformPostalCenter(long deviceId, String secret) {
         super(secret);
         this.idGenerator = new SnowflakeGenerator(deviceId);
     }

@@ -29,23 +29,20 @@ public class OrderProcessor extends AbstractProcessor<PlatformOrder<?, ?>> {
 
     @Override
     public void process(PlatformOrder<?, ?> order) {
-        switch (order.getOrder()) {
-            case SYSTEM:
-                SystemOrder<?, ?> systemOrder = (SystemOrder<?, ?>) order;
-                executeSystemOrder(systemOrder);
+        if (order instanceof SystemOrder) {
+            SystemOrder<?, ?> systemOrder = (SystemOrder<?, ?>) order;
+            executeSystemOrder(systemOrder);
 
-                if (!order.isSuccess()) {
-                    rollbackSystemOrder(systemOrder);
-                }
-                break;
-            case TASK:
-                TaskOrder<?> taskOrder = (TaskOrder<?>) order;
-                executeTaskOrder(taskOrder);
+            if (!order.isSuccess()) {
+                rollbackSystemOrder(systemOrder);
+            }
+        } else if (order instanceof TaskOrder) {
+            TaskOrder<?> taskOrder = (TaskOrder<?>) order;
+            executeTaskOrder(taskOrder);
 
-                if (!order.isSuccess()) {
-                    rollbackTaskOrder(taskOrder);
-                }
-                break;
+            if (!order.isSuccess()) {
+                rollbackTaskOrder(taskOrder);
+            }
         }
     }
 
@@ -73,9 +70,9 @@ public class OrderProcessor extends AbstractProcessor<PlatformOrder<?, ?>> {
 
     private void updateGraph(TaskOrder<?> order, Graph graph) {
         graph.offer(order.getTask());
+
         GraphState state = graph.state();
-        order.setGraphId(graph.getId());
-        order.setGraphState(state);
+        order.setGraphId(graph.getId()).setGraphState(state);
 
         if (!state.isCompleted()) {
             graphs.put(graph.getId(), graph);

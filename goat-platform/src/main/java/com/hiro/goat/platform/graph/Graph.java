@@ -1,6 +1,6 @@
 package com.hiro.goat.platform.graph;
 
-import com.hiro.goat.api.task.Task;
+import com.hiro.goat.core.task.AbstractTask;
 
 public interface Graph {
 
@@ -8,6 +8,8 @@ public interface Graph {
 
     GraphState state();
 
-    <T extends Task<?, R>, R> void offer(T task);
+    <T extends AbstractTask<?, R>, R> void offer(T task);
+
+    void rollback();
 
 }

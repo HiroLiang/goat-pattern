@@ -3,11 +3,9 @@ package com.hiro.goat.platform.order.task;
 import com.hiro.goat.core.task.AbstractTask;
 import com.hiro.goat.platform.graph.Graph;
 import com.hiro.goat.platform.graph.GraphState;
-import com.hiro.goat.platform.order.Order;
 import com.hiro.goat.platform.order.PlatformOrder;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public abstract class TaskOrder<R> extends PlatformOrder<AbstractTask<?, R>, R> {
 
@@ -15,24 +13,27 @@ public abstract class TaskOrder<R> extends PlatformOrder<AbstractTask<?, R>, R> 
     private final AbstractTask<?, R> task;
 
     @Getter
-    private final Class<? extends Graph> graphClass;
+    private Class<? extends Graph> graphClass;
 
     @Getter
-    @Setter
     private String graphId;
 
     @Getter
-    @Setter
     private GraphState graphState;
 
+    protected TaskOrder(AbstractTask<?, R> task) {
+        super();
+        this.task = task;
+    }
+
     protected TaskOrder(AbstractTask<?, R> task, Class<? extends Graph> graphClass) {
-        super(Order.TASK);
+        super();
         this.task = task;
         this.graphClass = graphClass;
     }
 
     protected TaskOrder(AbstractTask<?, R> task, Class<? extends Graph> graphClass, String graphId) {
-        super(Order.TASK);
+        super();
         this.task = task;
         this.graphClass = graphClass;
         this.graphId = graphId;
@@ -53,6 +54,21 @@ public abstract class TaskOrder<R> extends PlatformOrder<AbstractTask<?, R>, R> 
     @Override
     protected void rollback() {
         this.task.rollback(true).execute();
+    }
+
+    public TaskOrder<R> setGraphClass(Class<? extends Graph> graphClass) {
+        this.graphClass = graphClass;
+        return this;
+    }
+
+    public TaskOrder<R> setGraphId(String graphId) {
+        this.graphId = graphId;
+        return this;
+    }
+
+    public TaskOrder<R> setGraphState(GraphState graphState) {
+        this.graphState = graphState;
+        return this;
     }
 
 }
