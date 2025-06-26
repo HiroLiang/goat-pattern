@@ -28,7 +28,7 @@ public class WorkerStepDefs {
         long before = worker.getCurren();
 
         try {
-            Thread.sleep(310L);
+            Thread.sleep(350L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             fail("Test was interrupted");

@@ -13,6 +13,8 @@ public interface DispatchWorker<T> extends Worker {
 
     boolean offer(T task, long timeout, TimeUnit unit) throws InterruptedException;
 
+    boolean hasTask();
+
     int offer(Collection<T> taskList);
 
 }

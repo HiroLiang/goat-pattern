@@ -1,45 +1,64 @@
 package com.hiro.goat.core.utils;
 
-public class SnowflakeGenerator {
+import com.hiro.goat.api.exception.GoatException;
+import com.hiro.goat.api.identity.IdentityGenerator;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
 
-    private final long datacenterId;
-    private final long workerId;
+public class SnowflakeGenerator implements IdentityGenerator {
 
-    private final long epoch = 1748700000000L;
+    /**
+     * if you need to use the other generator, define another epoch
+     */
+    private final long epoch;
 
-    private final long datacenterBits = 5L;
-    private final long workerBits = 5L;
-    private final long sequenceBits = 12L;
+    /**
+     * allow 0 ~ 1023 number of devices
+     */
+    private final long deviceId;
 
-    private final long maxSequence = ~(-1L << sequenceBits);       // 4095
+    private final long deviceBits = 10L;
 
-    private final long workerShift = sequenceBits;
-    private final long datacenterShift = sequenceBits + workerBits;
-    private final long timestampShift = sequenceBits + workerBits + datacenterBits;
-
+    /**
+     * last ID's generate timestamp
+     */
     private long lastTimestamp = -1L;
 
+    /**
+     * sequence number allow 0 ~ 4095
+     */
     private long sequence = 0L;
 
-    public SnowflakeGenerator(long datacenterId, long workerId) {
-        final long maxDatacenterId = ~(-1L << datacenterBits);
-        if (datacenterId > maxDatacenterId || datacenterId < 0) {
-            throw new IllegalArgumentException("Datacenter ID need to be in 0~" + maxDatacenterId);
+    /**
+     * Constructor
+     *
+     * @param deviceId allow 0 ~ 1023 devices
+     */
+    public SnowflakeGenerator(long deviceId) {
+        this.epoch = 1695657600000L;
+        final long maxDatacenterId = ~(-1L << deviceBits);
+        if (deviceId > maxDatacenterId || deviceId < 0) {
+            throw GoatErrors.of("Datacenter ID need to be in 0~" + maxDatacenterId, IllegalModifyException.class);
         }
-
-        final long maxWorkerId = ~(-1L << workerBits);
-        if (workerId > maxWorkerId || workerId < 0) {
-            throw new IllegalArgumentException("Worker ID need to be in 0~" + maxWorkerId);
-        }
-        this.datacenterId = datacenterId;
-        this.workerId = workerId;
+        this.deviceId = deviceId;
     }
 
+    /**
+     * Get next ID
+     *
+     * @return long
+     */
+    @Override
     public synchronized long nextId() {
+        final long sequenceBits = 12L;
+
+        final long maxSequence = ~(-1L << sequenceBits);
+
         long timestamp = currentTime();
 
         if (timestamp < lastTimestamp) {
-            throw new RuntimeException("Clock moved backwards.");
+            throw GoatErrors.of("Clock moved backwards. Refusing to generate id for "
+                    + (lastTimestamp - timestamp) + " milliseconds.", GoatException.class);
         }
 
         if (timestamp == lastTimestamp) {
@@ -53,9 +72,8 @@ public class SnowflakeGenerator {
 
         lastTimestamp = timestamp;
 
-        return ((timestamp - epoch) << timestampShift)
-                | (datacenterId << datacenterShift)
-                | (workerId << workerShift)
+        return ((timestamp - epoch) << deviceBits + sequenceBits)
+                | (deviceId << sequenceBits)
                 | sequence;
     }
 

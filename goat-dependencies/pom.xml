@@ -1,147 +1,154 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.hiro.goat</groupId>
-  <artifactId>goat-dependencies</artifactId>
-  <version>0.0.1</version>
-  <packaging>pom</packaging>
+    <groupId>com.hiro.goat</groupId>
+    <artifactId>goat-dependencies</artifactId>
+    <version>0.0.1</version>
+    <packaging>pom</packaging>
 
-  <name>goat-dependencies</name>
+    <name>goat-dependencies</name>
 
-  <properties>
-    <goat.core.version>0.0.1</goat.core.version>
+    <properties>
+        <goat.core.version>0.0.1</goat.core.version>
 
-    <slf4j.version>2.0.17</slf4j.version>
-    <lombok.version>1.18.38</lombok.version>
-    <logback.version>1.5.18</logback.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <lombok.version>1.18.38</lombok.version>
+        <logback.version>1.5.18</logback.version>
 
-    <jackson.version>2.19.0</jackson.version>
+        <jackson.version>2.19.0</jackson.version>
+        <commons.lang3.version>3.17.0</commons.lang3.version>
 
-    <junit.version>4.13.2</junit.version>
-    <jupiter.version>5.12.2</jupiter.version>
-    <junit.suite.version>1.12.2</junit.suite.version>
+        <junit.version>4.13.2</junit.version>
+        <jupiter.version>5.13.1</jupiter.version>
+        <junit.suite.version>1.13.1</junit.suite.version>
 
-    <cucumber.version>7.22.2</cucumber.version>
-    <serenity.version>4.2.30</serenity.version>
+        <cucumber.version>7.22.2</cucumber.version>
+        <serenity.version>4.2.30</serenity.version>
 
-    <maven.compiler.version>3.14.0</maven.compiler.version>
-    <maven.surefire.version>3.5.3</maven.surefire.version>
+        <maven.compiler.version>3.14.0</maven.compiler.version>
+        <maven.surefire.version>3.5.3</maven.surefire.version>
 
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- goat dependencies -->
-      <dependency>
-        <groupId>com.hiro.goat</groupId>
-        <artifactId>goat-api</artifactId>
-        <version>${goat.core.version}</version>
-      </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- goat dependencies -->
+            <dependency>
+                <groupId>com.hiro.goat</groupId>
+                <artifactId>goat-api</artifactId>
+                <version>${goat.core.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>com.hiro.goat</groupId>
-        <artifactId>goat-core</artifactId>
-        <version>${goat.core.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>com.hiro.goat</groupId>
+                <artifactId>goat-core</artifactId>
+                <version>${goat.core.version}</version>
+            </dependency>
 
-      <!-- maven dependencies -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
+            <!-- maven dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${jupiter.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.junit.platform</groupId>
-        <artifactId>junit-platform-suite</artifactId>
-        <version>${junit.suite.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>io.cucumber</groupId>
-        <artifactId>cucumber-java</artifactId>
-        <version>${cucumber.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite</artifactId>
+                <version>${junit.suite.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>io.cucumber</groupId>
-        <artifactId>cucumber-junit-platform-engine</artifactId>
-        <version>${cucumber.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-java</artifactId>
+                <version>${cucumber.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>net.serenity-bdd</groupId>
-        <artifactId>serenity-core</artifactId>
-        <version>${serenity.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-junit-platform-engine</artifactId>
+                <version>${cucumber.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>net.serenity-bdd</groupId>
-        <artifactId>serenity-junit5</artifactId>
-        <version>${serenity.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>net.serenity-bdd</groupId>
+                <artifactId>serenity-core</artifactId>
+                <version>${serenity.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>net.serenity-bdd</groupId>
-        <artifactId>serenity-cucumber</artifactId>
-        <version>${serenity.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+            <dependency>
+                <groupId>net.serenity-bdd</groupId>
+                <artifactId>serenity-junit5</artifactId>
+                <version>${serenity.version}</version>
+            </dependency>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven.compiler.version}</version>
-        </plugin>
+            <dependency>
+                <groupId>net.serenity-bdd</groupId>
+                <artifactId>serenity-cucumber</artifactId>
+                <version>${serenity.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven.surefire.version}</version>
-        </plugin>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                </plugin>
 
-        <plugin>
-          <groupId>net.serenity-bdd.maven.plugins</groupId>
-          <artifactId>serenity-maven-plugin</artifactId>
-          <version>${serenity.version}</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>net.serenity-bdd.maven.plugins</groupId>
+                    <artifactId>serenity-maven-plugin</artifactId>
+                    <version>${serenity.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

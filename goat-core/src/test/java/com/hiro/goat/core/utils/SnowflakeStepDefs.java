@@ -1,5 +1,7 @@
 package com.hiro.goat.core.utils;
 
+import com.hiro.goat.core.exception.IllegalModifyException;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,11 +17,11 @@ public class SnowflakeStepDefs {
 
     private SnowflakeGenerator generator;
 
-    @Given("a snow flake generator")
+    @Given("a snowflake generator")
     public void a_snow_flake_generator() {
-        assertThrows(IllegalArgumentException.class, ()
-                -> generator = new SnowflakeGenerator(44, 44));
-        this.generator = new SnowflakeGenerator(31, 31);
+        assertThrows(IllegalModifyException.class, ()
+                -> generator = new SnowflakeGenerator(1999));
+        this.generator = new SnowflakeGenerator(31);
         assertNotNull(this.generator);
     }
 
@@ -35,4 +37,5 @@ public class SnowflakeStepDefs {
     public void i_have_identities_in_Set(int num) {
         assertEquals(num, identities.size());
     }
+
 }

@@ -1,6 +1,8 @@
 package com.hiro.goat.core.storage;
 
 import com.hiro.goat.api.storage.Storable;
+import com.hiro.goat.core.exception.GoatErrors;
+import com.hiro.goat.core.exception.IllegalModifyException;
 
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class Storage<K> implements Storable<K> {
         Object value = this.stored.get(key);
         if (value == null) return null;
         if (!clazz.isInstance(value)) {
-            throw new ClassCastException("Stored value is not of type " + clazz.getName());
+            throw GoatErrors.of("Stored value is not of type " + clazz.getName() + ".", IllegalModifyException.class);
         }
         return (T) value;
     }
@@ -52,4 +54,5 @@ public class Storage<K> implements Storable<K> {
     public boolean contains(K key) {
         return this.stored.containsKey(key);
     }
+
 }
