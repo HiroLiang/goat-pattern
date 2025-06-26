@@ -9,3 +9,5 @@ Feature: Test to manage children
     When I have two children in root
     And I ask to end child platform service
     Then it would destroy all children platform
+    When I deliver a test task
+    Then task result should be true

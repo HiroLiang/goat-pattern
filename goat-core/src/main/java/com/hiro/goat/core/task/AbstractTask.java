@@ -81,8 +81,9 @@ public abstract class AbstractTask<P, R> implements Task<P, R> {
         return this;
     }
 
-    protected boolean offerResult() {
-        return this.resultQueue.offer(this.result);
+    public void offerResult() {
+        if (!this.resultQueue.offer(this.result))
+            log.warn("Double offer result in task: \"{}\".", this.getClass().getName());
     }
 
     protected void preProcess() {

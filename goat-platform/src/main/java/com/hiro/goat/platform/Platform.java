@@ -26,15 +26,34 @@ import java.util.function.Consumer;
 @Slf4j
 public abstract class Platform extends QueueDispatchWorker<PlatformOrder<?, ?>> {
 
+    /**
+     * Postal code of mailbox
+     */
     @Getter
     protected final long id;
 
+    /**
+     * Parent's postal code. If the parent of this platform does not exist, id should be -1;
+     */
     protected final long parentId;
 
+    /**
+     * Receiver of platform order.
+     * 1. Register from the postal center.
+     * 2. Mailbox is required while asking parcel / delivering parcel.
+     * 3.Need to give it a consumer of order.
+     */
     protected final PlatformMailbox mailbox;
 
+    /**
+     * Order processor to distinguish system / task order, then execute the task.
+     */
     protected final OrderProcessor processor;
 
+    /**
+     * Postal center for the platform.
+     * 1. This is a generic postal center. If there isn't extra design, use PlatformPostalCenter directly.
+     */
     protected final PlatformPostalCenter postalCenter;
 
     protected final PlatformFactory factory;

@@ -47,6 +47,7 @@ public abstract class TaskOrder<R> extends PlatformOrder<AbstractTask<?, R>, R> 
 
     @Override
     protected void postProcess() {
+        this.task.offerResult();
         success = this.task.isSuccess();
         result = this.task.getResult();
     }

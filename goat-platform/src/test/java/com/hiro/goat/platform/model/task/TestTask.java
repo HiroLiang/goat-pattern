@@ -10,13 +10,18 @@ public class TestTask extends AbstractTask<Void, Boolean> {
     }
 
     @Override
-    protected void process() {
+    protected void preProcess() {
+        result = false;
+    }
 
+    @Override
+    protected void process() {
+        result = true;
     }
 
     @Override
     protected void rollback() {
-
+        result = false;
     }
 
 }

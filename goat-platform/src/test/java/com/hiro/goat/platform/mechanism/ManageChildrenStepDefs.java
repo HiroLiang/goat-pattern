@@ -3,6 +3,7 @@ package com.hiro.goat.platform.mechanism;
 import com.hiro.goat.platform.Platform;
 import com.hiro.goat.platform.model.platform.ChildPlatform;
 import com.hiro.goat.platform.model.platform.RootPlatform;
+import com.hiro.goat.platform.model.task.TestTask;
 import com.hiro.goat.platform.order.system.Order;
 import com.hiro.goat.platform.postal.PlatformPostalCenter;
 
@@ -22,7 +23,11 @@ public class ManageChildrenStepDefs {
 
     private Platform root;
 
+    private TestTask task;
+
     private long childId;
+
+    private long triggerTime = 0L;
 
     @Given("a root platform")
     public void a_root_platform() {
@@ -40,7 +45,7 @@ public class ManageChildrenStepDefs {
 
     @Then("root should has same class child")
     public void root_should_has_same_class_child() {
-        sleep(300);
+        sleep(100);
         childId = root.getPostalCode(ChildPlatform.class);
         assertTrue(childId > 0);
         log.info("Child platform(ID:\"{}\") created.", childId);
@@ -53,7 +58,7 @@ public class ManageChildrenStepDefs {
 
     @Then("I can not find any child")
     public void iCanNotFindAnyChild() {
-        sleep(100);
+        sleep(50);
         childId = root.getPostalCode(ChildPlatform.class);
         assertFalse(childId > 0);
         log.info("Child platform(ID:\"{}\") destroyed.", childId);
@@ -63,7 +68,7 @@ public class ManageChildrenStepDefs {
     public void i_have_two_children_in_root() {
         root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
         root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
-        sleep(100);
+        sleep(50);
         assertTrue(root.getPostalCode(ChildPlatform.class) > 0);
         log.info("Two child platforms created.");
     }
@@ -75,7 +80,7 @@ public class ManageChildrenStepDefs {
 
     @Then("it would destroy all children platform")
     public void it_would_destroy_all_children_platform() {
-        sleep(200);
+        sleep(100);
         assertFalse(root.getPostalCode(ChildPlatform.class) > 0);
         log.info("All child platforms destroyed.");
     }
@@ -87,6 +92,22 @@ public class ManageChildrenStepDefs {
             Thread.currentThread().interrupt();
             fail("Test was interrupted");
         }
+    }
+
+    @When("I deliver a test task")
+    public void i_deliver_a_test_task() {
+        task = new TestTask(null);
+        root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
+        sleep(50);
+        triggerTime = System.currentTimeMillis();
+        root.deliverTask(ChildPlatform.class, task);
+    }
+
+    @Then("task result should be true")
+    public void task_result_should_be_true() {
+        assertTrue(task.takeResult());
+        log.info("Task result: {}", task.getResult());
+        log.info("Task execution time: {}ms", System.currentTimeMillis() - triggerTime);
     }
 
 }
