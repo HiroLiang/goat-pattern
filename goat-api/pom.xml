@@ -2,15 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.hiro.goat</groupId>
+        <groupId>com.hiroliang.goat</groupId>
         <artifactId>goat-parent</artifactId>
         <version>0.0.1</version>
     </parent>
-
     <artifactId>goat-api</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>goat-api</name>
+    <name>Goat Api</name>
+    <description>Api module of goat pattern</description>
 
 </project>

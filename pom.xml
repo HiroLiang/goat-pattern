@@ -1,59 +1,82 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.hiro.goat</groupId>
-    <artifactId>goat-dependencies</artifactId>
+    <parent>
+        <groupId>com.hiroliang.goat</groupId>
+        <artifactId>goat-dependencies</artifactId>
+        <version>0.0.1</version>
+    </parent>
+
+    <artifactId>goat-parent</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1</version>
-  </parent>
 
-  <artifactId>goat-parent</artifactId>
-  <packaging>pom</packaging>
-  <version>0.0.1</version>
+    <name>Goat Parent</name>
+    <description>Goat pattern's parent pom</description>
+    <url>https://github.com/HiroLiang/goat-pattern</url>
 
-  <name>goat-parent</name>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-  <modules>
-    <module>goat-api</module>
-    <module>goat-core</module>
-    <module>goat-platform</module>
-  </modules>
+    <scm>
+        <url>https://github.com/HiroLiang/goat-pattern</url>
+        <tag>HEAD</tag>
+    </scm>
 
-  <dependencies>
-    <!-- slf4j -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
+    <developers>
+        <developer>
+            <id>hiroliang</id>
+            <name>Hiro Liang</name>
+            <email>hiromichi.liang@gmail.com</email>
+        </developer>
+    </developers>
 
-    <!-- lombok -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
+    <modules>
+        <module>goat-api</module>
+        <module>goat-core</module>
+        <module>goat-platform</module>
+    </modules>
 
-    <!-- commons-lang3 -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
+    <dependencies>
+        <!-- slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
-    <!-- jackson -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-  </dependencies>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+        <!-- commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

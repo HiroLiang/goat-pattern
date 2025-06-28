@@ -14,6 +14,11 @@ import io.cucumber.java.en.When;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.junit.Assert.*;
 
 @Slf4j
@@ -108,6 +113,39 @@ public class ManageChildrenStepDefs {
         assertTrue(task.takeResult());
         log.info("Task result: {}", task.getResult());
         log.info("Task execution time: {}ms", System.currentTimeMillis() - triggerTime);
+    }
+
+    @When("do pressure test {int} threads {int} tasks")
+    public void do_pressure_test_threads_tasks(int thread, int task) throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(thread);
+        CountDownLatch latch = new CountDownLatch(thread * task);
+
+        triggerTime = System.currentTimeMillis();
+        AtomicLong count = new AtomicLong();
+
+        for (int i = 0; i < thread; i++) {
+            executor.submit(() -> {
+                for (int j = 0; j < task; j++) {
+                    TestTask testTask = new TestTask(null);
+                    root.deliverTask(ChildPlatform.class, testTask);
+                    assertTrue(testTask.takeResult());
+                    latch.countDown();
+                    count.getAndIncrement();
+                }
+            });
+        }
+
+        latch.await();
+        long costTime = System.currentTimeMillis() - triggerTime;
+        log.info("Pressure test {} tasks, execution time: {}ms ({} tasks /s)", count.get(), costTime, count.get() * 1000 / costTime);
+
+        executor.shutdown();
+    }
+
+    @Then("get pressure test result")
+    public void getPressureTestResult() {
+        root.destroy();
+        postalCenter.destroy();
     }
 
 }

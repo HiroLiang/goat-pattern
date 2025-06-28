@@ -323,7 +323,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
         this.alertParams.lastAlertTime = System.currentTimeMillis();
     }
 
-    protected Consumer<T> customizeConsumer() {
+    protected Consumer<T> customizeRestConsumer() {
         return task ->
                 log.warn("Task \"{}\" is is discarded..", task.getClass().getName());
     }
@@ -337,7 +337,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
                 this.tasks.clear();
                 break;
             case CUSTOMIZE:
-                consumeAllTasks(this.customizeConsumer());
+                consumeAllTasks(this.customizeRestConsumer());
                 break;
         }
     }
