@@ -34,7 +34,7 @@ It provides a set of abstract tools to make it detached between systems / servic
 
 ### Build Tool
 
-1. Build dependency config (pom)
+- Build dependency config (pom)
 
 ```shell
 
@@ -42,7 +42,7 @@ cd ./goat-dependencies
 mvn clean install
 ```
 
-2. Build project
+- Build project
 
 ```shell
 
@@ -82,8 +82,8 @@ boolean verify(Signable signable);
 ### Worker (Lifecycle pattern)
 
 - Lifecycle: Define a continuous system's lifecycle.
-- Worker: Use lifecycle system to control work.
-- Dispatcher: A worker consume <T> to dispatch <T> to executor.
+- Worker: Use a lifecycle system to control work.
+- Dispatcher: A worker consumes <T> to dispatch <T> to the executor.
 - To use:
 
 ```java
@@ -119,7 +119,7 @@ public static void main(String[] args) {
         maxSize = 32,
         // Task queue in executor
         queueCapacity = 128,
-        // Recycle thread after rest for this seconds 
+        // Recycle thread after rest for this second 
         keepAliveTime = 120
 )
 public class CustomDispatcher<T> extends QueueDispatcherWorker<T> {
@@ -176,11 +176,11 @@ DispatchWorker<String> dispatcher = new QueueDispatchWorker<>(words::add);
         // Task queue size
         size = 100,
         // Task process type before pause / stop / destroy Dispatcher
-        // CONSUME: Try to consume all task (will discard all after timeout)
+        // CONSUME: Try to consume all tasks (will discard all after timeout)
         // DISCARD: Discard all rest tasks directly
         // CUSTOMIZE: Process with override method customizeRestConsumer()
         schedule = ResidualTaskSchedule.CUSTOMIZE,
-        // Discard all task after this time (only use CONSUME)
+        // Discard all tasks after this time (only use CONSUME)
         timeout = 120L,
         // timeout unit (only use CONSUME) 
         timeoutUnit = TimeUnit.SECONDS
@@ -199,7 +199,7 @@ public class CustomDispatcher<T> extends QueueDispatcherWorker<T> {
         alertSize = 80,
         // Only alert one time in this period
         alertPeriod = 12,
-        // period tume unit
+        // period time unit
         periodUnit = TimeUnit.HOURS
 )
 public class CustomDispatcher<T> extends QueueDispatcherWorker<T> {
@@ -210,3 +210,69 @@ public class CustomDispatcher<T> extends QueueDispatcherWorker<T> {
 ---
 
 ### Postal System
+
+- Implement of Dispatcher
+- Generate mailbox for register and let mailbox can deliver postal parcel through the postal center.
+- To use:
+
+```java
+// Extends PostalCenter and define what you want the parcel to carry.
+public class TestPostalCenter extends PostalCenter<String> {
+
+    // Provide a secret for Mac Signer, 
+    public TestPostalCenter(String secret) {
+        super(secret);
+    }
+
+    @Override
+    protected long createPostalCode() {
+        // Define how to generate postal code
+    }
+
+    @Override
+    protected Mailbox<String> createMailBox(long postalCode) {
+        // Define what kind of mailbox you want to create by the postal code
+    }
+
+}
+```
+
+```java
+public class TestMailbox extends Mailbox<String> {
+
+    // To generate mailbox at least need postal code and the HmacSha256Signer in the postal center.
+    public TestMailbox(long postalCode, Verifier verifier) {
+        super(postalCode, verifier);
+    }
+
+    // Define how postal center to deliver parcel to this mailbox.
+    @Override
+    public void deliver(PostalParcel<String> parcel) {
+        this.word = parcel.verifying(this).reveal();
+        log.info("TestMailBox receive parcel contains: {}", this.word);
+    }
+
+}
+```
+
+```java
+public static void main(String[] args) {
+    PostalCenter<String> postalCenter = new TestPostalCenter("dev-secret-123456");
+
+    // Start running the postal center
+    postalCenter.start();
+
+    // Use register to get mailbox
+    Mailbox<String> mailbox = postalCenter.register();
+
+    // Giving a target postal code to get a parcel. 
+    long targetPostalCode = 1L;
+    PostalParcel<String> parcel = postalCenter.getParcel(mailbox, targetPostalCode, RecipientType.MAILBOX);
+
+    // Use submit or offer to hang over the parcel.
+    postalCenter.submit(parcel);
+    postalCenter.offer(parcel);
+}
+```
+
+### Platform System
