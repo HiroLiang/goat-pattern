@@ -40,6 +40,13 @@ public abstract class Mailbox<T> {
      */
     public abstract void deliver(PostalParcel<T> parcel);
 
+    /**
+     * Use verifier in mailbox to verify sealed PostalParcel
+     *
+     * @param parcel PostalParcel
+     *
+     * @return true if verified
+     */
     public boolean verify(PostalParcel<T> parcel) {
         return this.verifier.verify(parcel);
     }
