@@ -184,18 +184,6 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
     }
 
     @Override
-    public boolean hasTask() {
-        return !this.tasks.isEmpty();
-    }
-
-    /**
-     * Offer tasks. Return the last offer index.
-     *
-     * @param tasks Consumer accepts collection.
-     *
-     * @return Offer success if return equals collection size.
-     */
-    @Override
     public int offer(Collection<T> tasks) {
         int index = 0;
         for (T task : tasks) {
@@ -203,6 +191,11 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
             index++;
         }
         return index;
+    }
+
+    @Override
+    public boolean hasTask() {
+        return !this.tasks.isEmpty();
     }
 
     @Override
@@ -323,7 +316,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
         this.alertParams.lastAlertTime = System.currentTimeMillis();
     }
 
-    protected Consumer<T> customizeConsumer() {
+    protected Consumer<T> customizeRestConsumer() {
         return task ->
                 log.warn("Task \"{}\" is is discarded..", task.getClass().getName());
     }
@@ -337,7 +330,7 @@ public class QueueDispatchWorker<T> extends AbstractWorker implements DispatchWo
                 this.tasks.clear();
                 break;
             case CUSTOMIZE:
-                consumeAllTasks(this.customizeConsumer());
+                consumeAllTasks(this.customizeRestConsumer());
                 break;
         }
     }

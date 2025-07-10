@@ -7,7 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * General GoatException generator
@@ -15,37 +20,72 @@ import java.lang.reflect.Constructor;
 @Slf4j
 public class GoatErrors {
 
+    private static final Map<Class<? extends GoatException>, Function<String, ? extends GoatException>>
+            msgConsCache = new ConcurrentHashMap<>();
+
+    private static final Map<Class<? extends GoatException>, BiFunction<String, Throwable, ? extends GoatException>>
+            msgConsWithCauseCache = new ConcurrentHashMap<>();
+
     private static final int MAX_LENGTH = 512;
 
+    @SuppressWarnings("unchecked")
     public static <E extends GoatException> E of(String message, Class<E> exceptionClass) {
         Logger logger = LoggerFactory.getLogger(getCallerClass());
         logger.error("{}", sanitize(message));
-        return getErrorInstance(message, exceptionClass);
+        return (E) msgConsCache.computeIfAbsent(exceptionClass, k ->
+                getFunction(exceptionClass)).apply(message);
     }
 
+    @SuppressWarnings("unchecked")
     public static <E extends GoatException> E of(String message, Class<E> exceptionClass, Throwable cause) {
         Logger logger = LoggerFactory.getLogger(getCallerClass());
         logger.error("{}", sanitize(message), cause);
-        return getErrorInstance(message, exceptionClass, cause);
+        return (E) msgConsWithCauseCache.computeIfAbsent(exceptionClass, k ->
+                getBiFunction(exceptionClass)).apply(message, cause);
     }
 
-    private static <E extends GoatException> E getErrorInstance(String message, Class<E> exceptionClass) {
+    @SuppressWarnings("unchecked")
+    private static <E extends GoatException> Function<String, GoatException> getFunction(Class<E> exceptionClass) {
         try {
             Constructor<E> constructor = exceptionClass.getConstructor(String.class);
-            return constructor.newInstance(message);
-        } catch (Exception e) {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            MethodHandle handle = lookup.unreflectConstructor(constructor);
+
+            CallSite site = LambdaMetafactory.metafactory(
+                    lookup,
+                    "apply",
+                    MethodType.methodType(Function.class),
+                    MethodType.methodType(Object.class, Object.class),
+                    handle,
+                    MethodType.methodType(exceptionClass, String.class)
+            );
+            return (Function<String, GoatException>) site.getTarget().invokeExact();
+        } catch (Throwable e) {
             log.warn("Can't create exception instance for class: {}. Use default exception.", exceptionClass.getName(), e);
-            throw new GoatException(message);
+            return GoatException::new;
         }
     }
 
-    private static <E extends GoatException> E getErrorInstance(String message, Class<E> exceptionClass, Throwable cause) {
+    @SuppressWarnings("unchecked")
+    private static <E extends GoatException> BiFunction<String, Throwable, GoatException> getBiFunction(Class<E> exceptionClass) {
         try {
             Constructor<E> constructor = exceptionClass.getConstructor(String.class, Throwable.class);
-            return constructor.newInstance(message, cause);
-        } catch (Exception e) {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            MethodHandle handle = MethodHandles.lookup().unreflectConstructor(constructor);
+
+            CallSite site = LambdaMetafactory.metafactory(
+                    lookup,
+                    "apply",
+                    MethodType.methodType(BiFunction.class),
+                    MethodType.methodType(Object.class, Object.class, Object.class),
+                    handle,
+                    MethodType.methodType(exceptionClass, String.class, Throwable.class)
+            );
+
+            return (BiFunction<String, Throwable, GoatException>) site.getTarget().invokeExact();
+        } catch (Throwable e) {
             log.warn("Can't create exception instance for class: {}. Use default exception.", exceptionClass.getName(), e);
-            throw new GoatException(message, cause);
+            return GoatException::new;
         }
     }
 

@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hiro.goat</groupId>
+    <groupId>com.hiroliang.goat</groupId>
     <artifactId>goat-dependencies</artifactId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
@@ -36,13 +36,13 @@
         <dependencies>
             <!-- goat dependencies -->
             <dependency>
-                <groupId>com.hiro.goat</groupId>
+                <groupId>com.hiroliang.goat</groupId>
                 <artifactId>goat-api</artifactId>
                 <version>${goat.core.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.hiro.goat</groupId>
+                <groupId>com.hiroliang.goat</groupId>
                 <artifactId>goat-core</artifactId>
                 <version>${goat.core.version}</version>
             </dependency>

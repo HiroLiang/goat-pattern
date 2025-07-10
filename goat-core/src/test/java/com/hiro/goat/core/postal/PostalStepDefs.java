@@ -16,7 +16,7 @@ public class PostalStepDefs {
 
     private PostalCenter<String> postalCenter;
 
-    private TestMailbox mailbox1;
+    private Mailbox<String> mailbox1;
 
     private TestMailbox mailbox2;
 
@@ -28,7 +28,7 @@ public class PostalStepDefs {
 
     @When("I register two mailbox")
     public void i_register_two_mailbox() {
-        this.mailbox1 = (TestMailbox) this.postalCenter.register();
+        this.mailbox1 = this.postalCenter.register();
         this.mailbox2 = (TestMailbox) this.postalCenter.register();
 
         assertTrue(postalCenter.isRegistered(mailbox1));

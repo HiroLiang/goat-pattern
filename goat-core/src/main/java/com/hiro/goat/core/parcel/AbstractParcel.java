@@ -4,10 +4,21 @@ import com.hiro.goat.api.parcel.Parcel;
 import com.hiro.goat.core.exception.GoatErrors;
 import com.hiro.goat.core.exception.IllegalModifyException;
 
+/**
+ * Define default parcel methods.
+ *
+ * @param <T> item type
+ */
 public abstract class AbstractParcel<T> implements Parcel<T> {
 
+    /**
+     * Item to pack
+     */
     protected T value;
 
+    /**
+     * Sealing state flag.
+     */
     protected volatile boolean sealed = false;
 
     @Override
