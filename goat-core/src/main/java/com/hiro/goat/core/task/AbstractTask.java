@@ -10,24 +10,56 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Define default task mechanism
+ *
+ * @param <P> initial param
+ * @param <R> execute result
+ */
 @Slf4j
 public abstract class AbstractTask<P, R> implements Task<P, R> {
 
+    /**
+     * Provide a queue for reactive requirement
+     */
     private final BlockingQueue<R> resultQueue = new ArrayBlockingQueue<>(1);
 
+    /**
+     * Task input
+     */
     protected P param;
 
+    /**
+     * Task output
+     */
     protected R result;
 
+    /**
+     * success flag
+     */
     protected volatile boolean success = false;
 
+    /**
+     * execute rollback or process flag
+     */
     protected volatile boolean rollback = false;
 
+    /**
+     * positive process
+     */
     protected abstract void process();
 
+    /**
+     * rollback process
+     */
     protected abstract void rollback();
 
-    public AbstractTask(DependencyProvider dependencies) {
+    /**
+     * Constructor:
+     *
+     * @param ignore let implement class default provide DependencyProvider
+     */
+    public AbstractTask(DependencyProvider ignore) {
     }
 
     @Override
@@ -67,6 +99,12 @@ public abstract class AbstractTask<P, R> implements Task<P, R> {
         execute();
     }
 
+    /**
+     * For who need this task result, can let thread block.
+     * If you use Sink, ignore this method
+     *
+     * @return Result
+     */
     public R takeResult() {
         try {
             return this.resultQueue.take();

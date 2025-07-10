@@ -5,6 +5,9 @@ import com.hiro.goat.api.identity.IdentityGenerator;
 import com.hiro.goat.core.exception.GoatErrors;
 import com.hiro.goat.core.exception.IllegalModifyException;
 
+/**
+ * ID generator
+ */
 public class SnowflakeGenerator implements IdentityGenerator {
 
     /**

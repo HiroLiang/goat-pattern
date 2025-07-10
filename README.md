@@ -60,6 +60,8 @@ mvn clean test -am
 mvn clean verify -am
 ```
 
+![mvn_test](.github/mvn_verify.png)
+
 ## Core Features
 
 ### Signature
@@ -276,3 +278,5 @@ public static void main(String[] args) {
 ```
 
 ### Platform System
+
+- Building...
