@@ -24,12 +24,12 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     /**
      * Hold registered mailboxes.
      */
-    private final Map<Long, Mailbox<T>> registeredHolders = new ConcurrentHashMap<>();
+    private final Map<Long, Mailbox<T>> registeredMailboxesHolder = new ConcurrentHashMap<>();
 
     /**
      * Hold groups and who join in this group.
      */
-    private final Map<String, Set<Long>> registeredGroups = new ConcurrentHashMap<>();
+    private final Map<String, Set<Long>> registeredGroupsHolder = new ConcurrentHashMap<>();
 
     /**
      * Provide and verify signature (use sha-256)
@@ -46,14 +46,14 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     }
 
     /**
-     * Customize way to generate postal code
+     * Customize the way to generate postal code
      *
      * @return postal code (long)
      */
     protected abstract long createPostalCode();
 
     /**
-     * Customize way to generate mailbox
+     * Customize the way to generate mailbox
      *
      * @param postalCode from the previous method
      *
@@ -85,7 +85,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     public Mailbox<T> register() {
         long postalCode = createPostalCode();
         Mailbox<T> mailBox = createMailBox(postalCode);
-        registeredHolders.put(postalCode, mailBox);
+        registeredMailboxesHolder.put(postalCode, mailBox);
         return mailBox;
     }
 
@@ -95,7 +95,9 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
      * @param mailBox Mailbox
      */
     public void unregister(Mailbox<T> mailBox) {
-        registeredHolders.remove(mailBox.getPostalCode());
+        verifyMailbox(mailBox);
+        removeFromGroups(mailBox);
+        registeredMailboxesHolder.remove(mailBox.getPostalCode());
     }
 
     /**
@@ -110,12 +112,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
         }
 
         verifyMailbox(mailBox);
-
-        if (registeredGroups.containsKey(group) && registeredGroups.get(group).contains(mailBox.getPostalCode())) {
-            return;
-        }
-
-        registeredGroups.computeIfAbsent(group, k -> ConcurrentHashMap.newKeySet()).add(mailBox.getPostalCode());
+        registeredGroupsHolder.computeIfAbsent(group, k -> ConcurrentHashMap.newKeySet()).add(mailBox.getPostalCode());
     }
 
     /**
@@ -130,10 +127,17 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
         }
 
         verifyMailbox(mailBox);
+        removeFromGroups(mailBox, group);
+    }
 
-        if (registeredGroups.containsKey(group)) {
-            registeredGroups.get(group).remove(mailBox.getPostalCode());
-        }
+    /**
+     * Unregister all groups
+     *
+     * @param mailBox Mailbox
+     */
+    public void unregisterAllGroups(Mailbox<T> mailBox) {
+        verifyMailbox(mailBox);
+        removeFromGroups(mailBox);
     }
 
     /**
@@ -141,22 +145,19 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
      *
      * @param sender    sender's Mailbox
      * @param recipient recipient postal code
-     * @param type      type of recipient (for a particular mailbox / all)
      *
      * @return PostalParcel
      */
-    public PostalParcel<T> getParcel(Mailbox<T> sender, long recipient, RecipientType type) {
+    public PostalParcel<T> getParcel(Mailbox<T> sender, long recipient) {
         verifyMailbox(sender);
-        if (RecipientType.MAILBOX.equals(type) && !isRegistered(recipient)) {
+        if (!isRegistered(recipient)) {
             throw GoatErrors.of("Recipient is not registered.", PostalException.class);
-        } else if (RecipientType.GROUP.equals(type)) {
-            throw GoatErrors.of("Recipient type is GROUP, can't get parcel by postal code.", PostalException.class);
         }
-        return new PostalParcel<>(sender.getPostalCode(), recipient, type);
+        return new PostalParcel<>(sender.getPostalCode(), recipient, RecipientType.MAILBOX);
     }
 
     /**
-     * Get PostalParcel to particular recipient for delivering to group
+     * Get PostalParcel to a particular recipient for delivering to a group
      *
      * @param sender sender's Mailbox
      * @param group  recipients' group
@@ -169,6 +170,18 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     }
 
     /**
+     * Get PostalParcel to all recipients who registered this postal center
+     *
+     * @param sender sender's Mailbox
+     *
+     * @return PostalParcel
+     */
+    public PostalParcel<T> getBroadcastParcel(Mailbox<T> sender) {
+        verifyMailbox(sender);
+        return new PostalParcel<>(sender.getPostalCode(), -1L, RecipientType.BROADCAST);
+    }
+
+    /**
      * Check is postal code registered
      *
      * @param postalCode Long
@@ -176,7 +189,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
      * @return true if this code registered
      */
     public boolean isRegistered(long postalCode) {
-        return registeredHolders.containsKey(postalCode);
+        return registeredMailboxesHolder.containsKey(postalCode);
     }
 
     /**
@@ -187,7 +200,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
      * @return true if Mailbox registered
      */
     public boolean isRegistered(Mailbox<T> mailBox) {
-        return registeredHolders.containsKey(mailBox.getPostalCode());
+        return mailBox != null && registeredMailboxesHolder.containsKey(mailBox.getPostalCode());
     }
 
     /**
@@ -220,7 +233,7 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
                 throw GoatErrors.of("Group is blank.", PostalException.class);
             }
 
-            if (!registeredGroups.containsKey(parcel.getGroup())) {
+            if (!registeredGroupsHolder.containsKey(parcel.getGroup())) {
                 throw GoatErrors.of("Group is not registered.", PostalException.class);
             }
         }
@@ -236,17 +249,46 @@ public abstract class PostalCenter<T> extends QueueDispatchWorker<PostalParcel<T
     private List<Mailbox<T>> getRecipients(PostalParcel<T> parcel) {
         switch (parcel.getRecipientType()) {
             case MAILBOX:
-                return Collections.singletonList(this.registeredHolders.get(parcel.getRecipient()));
+                return Collections.singletonList(this.registeredMailboxesHolder.get(parcel.getRecipient()));
             case GROUP:
-                Set<Long> mailBoxIds = this.registeredGroups.get(parcel.getGroup());
-                return this.registeredHolders.values().stream()
+                Set<Long> mailBoxIds = this.registeredGroupsHolder.get(parcel.getGroup());
+                return this.registeredMailboxesHolder.values().stream()
                         .filter(mailBox -> StringUtils.isBlank(parcel.getGroup()) ||
                                 mailBoxIds.contains(mailBox.getPostalCode()))
                         .collect(Collectors.toList());
             case BROADCAST:
-                return new ArrayList<>(this.registeredHolders.values());
+                return new ArrayList<>(this.registeredMailboxesHolder.values());
             default:
                 throw GoatErrors.of("Unknown recipient type: " + parcel.getRecipientType(), PostalException.class);
+        }
+    }
+
+    /**
+     * Remove mailbox from groups holder
+     *
+     * @param mailBox  to remove
+     * @param groupIds group IDs to remove
+     */
+    private void removeFromGroups(Mailbox<T> mailBox, String... groupIds) {
+        if (mailBox == null) return;
+
+        if (groupIds == null || groupIds.length == 0) {
+            Set<String> groups = this.registeredGroupsHolder.keySet().stream()
+                    .filter(group -> this.registeredGroupsHolder.get(group).contains(mailBox.getPostalCode()))
+                    .collect(Collectors.toSet());
+            groups.forEach(group -> this.registeredGroupsHolder.get(group).remove(mailBox.getPostalCode()));
+        } else {
+            Arrays.stream(groupIds).forEach(groupId -> {
+                if (this.registeredGroupsHolder.containsKey(groupId)) {
+                    this.registeredGroupsHolder.get(groupId).remove(mailBox.getPostalCode());
+                }
+            });
+        }
+
+        for (String groupId : registeredGroupsHolder.keySet()) {
+            if (registeredGroupsHolder.get(groupId).isEmpty()) {
+                registeredGroupsHolder.remove(groupId);
+            }
         }
     }
 

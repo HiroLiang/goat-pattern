@@ -8,7 +8,7 @@ Feature: Test Postal Center Mechanism
     When I register a group "group"
     And deliver a test parcel with word "test" with group "group"
     Then the other mailbox should get a parcel contains word "test"
-    When I unregister group "group"
+    When I unregister group
     And deliver a test parcel with word "test" with group "group"
     Then the other mailbox can't get parcel with word "test"
     When I unregister mailbox

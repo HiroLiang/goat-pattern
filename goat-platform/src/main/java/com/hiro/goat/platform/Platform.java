@@ -2,13 +2,12 @@ package com.hiro.goat.platform;
 
 import com.hiro.goat.core.exception.GoatErrors;
 import com.hiro.goat.core.postal.PostalParcel;
-import com.hiro.goat.core.postal.RecipientType;
 import com.hiro.goat.core.task.AbstractTask;
 import com.hiro.goat.core.worker.QueueDispatchWorker;
 import com.hiro.goat.platform.exception.PlatformException;
 import com.hiro.goat.platform.factory.PlatformFactory;
 import com.hiro.goat.platform.order.PlatformOrder;
-import com.hiro.goat.platform.order.system.Order;
+import com.hiro.goat.platform.order.system.Orders;
 import com.hiro.goat.platform.order.system.SystemOrder;
 import com.hiro.goat.platform.order.task.TaskOrder;
 import com.hiro.goat.platform.order.task.TaskWrapper;
@@ -229,7 +228,7 @@ public abstract class Platform extends QueueDispatchWorker<PlatformOrder<?, ?>> 
     }
 
     private PostalParcel<PlatformOrder<?, ?>> getParcel(long postalCode, PlatformOrder<?, ?> order) {
-        PostalParcel<PlatformOrder<?, ?>> parcel = postalCenter.getParcel(this.mailbox, postalCode, RecipientType.MAILBOX);
+        PostalParcel<PlatformOrder<?, ?>> parcel = postalCenter.getParcel(this.mailbox, postalCode);
         parcel.put(order);
         return parcel;
     }
@@ -253,9 +252,9 @@ public abstract class Platform extends QueueDispatchWorker<PlatformOrder<?, ?>> 
     }
 
     private void sendScaleOutOrder(TaskOrder<?> order) {
-        PostalParcel<PlatformOrder<?, ?>> parcel = postalCenter.getParcel(this.mailbox, this.parentId, RecipientType.MAILBOX);
+        PostalParcel<PlatformOrder<?, ?>> parcel = postalCenter.getParcel(this.mailbox, this.parentId);
 
-        parcel.put(Order.SCALE_OUT()
+        parcel.put(Orders.SCALE_OUT()
                 .platformOf(this.getClass())
                 .withTask(order));
 
