@@ -114,19 +114,35 @@ public abstract class AbstractTask<P, R> implements Task<P, R> {
         }
     }
 
+    /**
+     * Set is rollback while process
+     *
+     * @param rollback is rollback
+     *
+     * @return this
+     */
     public AbstractTask<P, R> rollback(boolean rollback) {
         this.rollback = rollback;
         return this;
     }
 
+    /**
+     * Offer result to result queue
+     */
     public void offerResult() {
         if (!this.resultQueue.offer(this.result))
             log.warn("Double offer result in task: \"{}\".", this.getClass().getName());
     }
 
+    /**
+     * Process before the main process (contains rollback).
+     */
     protected void preProcess() {
     }
 
+    /**
+     * Process after the main process (contains rollback).
+     */
     protected void postProcess() {
     }
 

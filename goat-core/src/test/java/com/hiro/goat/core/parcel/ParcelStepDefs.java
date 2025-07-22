@@ -60,7 +60,7 @@ public class ParcelStepDefs {
 
         TestValue value = new TestValue();
         Exception e = assertThrows(IllegalModifyException.class, () -> this.parcel.put(value));
-        assertEquals("Can't put a value in the parcel which's sealed.", e.getMessage());
+        assertEquals("Can't put the value into a parcel which's sealed.", e.getMessage());
     }
 
     @When("I reveal the parcel")

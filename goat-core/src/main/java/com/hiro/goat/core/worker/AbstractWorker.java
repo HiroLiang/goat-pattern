@@ -6,9 +6,15 @@ import com.hiro.goat.core.exception.IllegalModifyException;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Define worker's lifecycle mechanism
+ */
 @Slf4j
 public abstract class AbstractWorker extends AbstractLifecycle implements Worker {
 
+    /**
+     * Thread to do work
+     */
     protected Thread workerThread;
 
     @Override
@@ -51,6 +57,11 @@ public abstract class AbstractWorker extends AbstractLifecycle implements Worker
     protected void onDestroy() {
     }
 
+    /**
+     * Create and bind thread to work
+     *
+     * @return Thread
+     */
     protected Thread createWorkerThread() {
         Thread thread = new Thread(this::work);
         thread.setName(this.getClass().getSimpleName() + "-worker-" + thread.getId());

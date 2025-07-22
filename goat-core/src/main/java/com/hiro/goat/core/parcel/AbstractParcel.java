@@ -24,7 +24,7 @@ public abstract class AbstractParcel<T> implements Parcel<T> {
     @Override
     public void put(T value) {
         if (this.sealed) {
-            throw GoatErrors.of("Can't put a value in the parcel which's sealed.", IllegalModifyException.class);
+            throw GoatErrors.of("Can't put the value into a parcel which's sealed.", IllegalModifyException.class);
         }
         this.value = value;
     }

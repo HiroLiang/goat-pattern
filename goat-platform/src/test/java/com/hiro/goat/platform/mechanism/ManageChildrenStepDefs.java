@@ -4,7 +4,7 @@ import com.hiro.goat.platform.Platform;
 import com.hiro.goat.platform.model.platform.ChildPlatform;
 import com.hiro.goat.platform.model.platform.RootPlatform;
 import com.hiro.goat.platform.model.task.TestTask;
-import com.hiro.goat.platform.order.system.Order;
+import com.hiro.goat.platform.order.system.Orders;
 import com.hiro.goat.platform.postal.PlatformPostalCenter;
 
 import io.cucumber.java.en.And;
@@ -45,7 +45,7 @@ public class ManageChildrenStepDefs {
 
     @When("I create a child platform")
     public void i_create_a_child_platform() {
-        root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
+        root.orderPlatform(root.getId(), Orders.CREATE().platformOf(ChildPlatform.class));
     }
 
     @Then("root should has same class child")
@@ -58,7 +58,7 @@ public class ManageChildrenStepDefs {
 
     @When("I destroy the child")
     public void i_destroy_the_child() {
-        root.orderPlatform(root.getId(), Order.DESTROY().id(childId));
+        root.orderPlatform(root.getId(), Orders.DESTROY().id(childId));
     }
 
     @Then("I can not find any child")
@@ -71,8 +71,8 @@ public class ManageChildrenStepDefs {
 
     @When("I have two children in root")
     public void i_have_two_children_in_root() {
-        root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
-        root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
+        root.orderPlatform(root.getId(), Orders.CREATE().platformOf(ChildPlatform.class));
+        root.orderPlatform(root.getId(), Orders.CREATE().platformOf(ChildPlatform.class));
         sleep(50);
         assertTrue(root.getPostalCode(ChildPlatform.class) > 0);
         log.info("Two child platforms created.");
@@ -80,7 +80,7 @@ public class ManageChildrenStepDefs {
 
     @And("I ask to end child platform service")
     public void i_ask_to_end_child_platform_service() {
-        root.orderPlatform(root.getId(), Order.END_SERVICE().platformOf(ChildPlatform.class));
+        root.orderPlatform(root.getId(), Orders.END_SERVICE().platformOf(ChildPlatform.class));
     }
 
     @Then("it would destroy all children platform")
@@ -102,7 +102,7 @@ public class ManageChildrenStepDefs {
     @When("I deliver a test task")
     public void i_deliver_a_test_task() {
         task = new TestTask(null);
-        root.orderPlatform(root.getId(), Order.CREATE().platformOf(ChildPlatform.class));
+        root.orderPlatform(root.getId(), Orders.CREATE().platformOf(ChildPlatform.class));
         sleep(50);
         triggerTime = System.currentTimeMillis();
         root.deliverTask(ChildPlatform.class, task);

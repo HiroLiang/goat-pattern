@@ -37,7 +37,7 @@ public class PostalStepDefs {
 
     @And("deliver a test parcel with word {string}")
     public void deliver_a_test_parcel_with_word(String word) {
-        PostalParcel<String> parcel = postalCenter.getParcel(mailbox1, mailbox2.getPostalCode(), RecipientType.MAILBOX);
+        PostalParcel<String> parcel = postalCenter.getBroadcastParcel(mailbox1);
         parcel.put(word);
         assertTrue(postalCenter.offer(parcel));
     }
@@ -62,10 +62,10 @@ public class PostalStepDefs {
         assertTrue(postalCenter.offer(parcel));
     }
 
-    @When("I unregister group {string}")
-    public void i_unregister_group(String group) {
+    @When("I unregister group")
+    public void i_unregister_group() {
         assertThrows(IllegalModifyException.class, () -> postalCenter.unregisterGroup(mailbox2, null));
-        postalCenter.unregisterGroup(mailbox2, group);
+        postalCenter.unregisterAllGroups(mailbox2);
     }
 
     @Then("the other mailbox can't get parcel with word {string}")
@@ -87,7 +87,7 @@ public class PostalStepDefs {
     @Then("I can not deliver parcel")
     public void i_can_not_deliver_parcel() {
         assertThrows(PostalException.class, () ->
-                postalCenter.getParcel(mailbox1, mailbox2.getPostalCode(), RecipientType.MAILBOX));
+                postalCenter.getParcel(mailbox1, mailbox2.getPostalCode()));
 
         assertThrows(PostalException.class, () ->
                 postalCenter.getParcel(mailbox1, "test-group"));

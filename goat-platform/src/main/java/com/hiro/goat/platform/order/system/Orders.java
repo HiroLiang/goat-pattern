@@ -6,7 +6,7 @@ import com.hiro.goat.platform.Platform;
 import com.hiro.goat.platform.exception.PlatformException;
 import com.hiro.goat.platform.order.task.TaskOrder;
 
-public class Order {
+public class Orders {
 
     /**
      * Get a create-order builder
